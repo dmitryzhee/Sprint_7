@@ -18,7 +18,11 @@ public class CourierCreationTest {
 
     public static final Courier COURIER = new Courier("naruta2", "12345", "Ivan");
 
+    public static final Courier NO_PASSWORD_COURIER = new Courier("naruto50", null, "Ivan");
+
     private ScooterServiceClient client = new ScooterServiceClient();
+
+    Courier courier;
 
     RequestSpecification requestSpecification;
 
@@ -28,38 +32,50 @@ public class CourierCreationTest {
                 .setBaseUri(SCOOTER_SERVICE_URI)
                 .setContentType(ContentType.JSON)
                 .build();
+        client.setRequestSpecification(requestSpecification);
+
     }
 
 
 
     @Test
     public void courierCreationSuccess () {
-
-        client.setRequestSpecification(requestSpecification);
-
-        ValidatableResponse response = client.createCourier(COURIER);
+        courier=COURIER;
+        ValidatableResponse response = client.createCourier(courier);
         response.assertThat().statusCode(201);
+    }
 
-//        response.assertThat().body("ok", is(true));
+    @Test
+    public void courierCreationSuccessResponseIsOk () {
+        courier=COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().body("ok", is(true));
     }
 
     @Test
     public void couriersWithSameLoginCreationFailure () {
-        client.setRequestSpecification(requestSpecification);
-        client.createCourier(COURIER);
-        ValidatableResponse response = client.createCourier(COURIER);
+        courier=COURIER;
+        client.createCourier(courier);
+        ValidatableResponse response = client.createCourier(courier);
         response.assertThat().body(containsString("Этот логин уже используется"));
     }
 
-
+    @Test
+    public void courierWithPartialParametersCorrectMessage() {
+        courier = NO_PASSWORD_COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().body(containsString("Недостаточно данных для создания учетной записи"));
+    }
 
 
 
     @After
     public void tearDown() {
-        int id = client.login(Credentials.fromCourier(COURIER)).extract().body().jsonPath()
-                .getInt("id");
-        client.deleteUser(id);
+        if (courier.equals(COURIER)) {
+            int id = client.login(Credentials.fromCourier(courier)).extract().body().jsonPath()
+                    .getInt("id");
+            client.deleteUser(id);
+        }
     }
 
 }
