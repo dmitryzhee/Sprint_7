@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
 public class CourierCreationTest {
@@ -19,23 +20,38 @@ public class CourierCreationTest {
 
     private ScooterServiceClient client = new ScooterServiceClient();
 
+    RequestSpecification requestSpecification;
+
+    @Before
+    public void setUp() {
+       requestSpecification= new RequestSpecBuilder()
+                .setBaseUri(SCOOTER_SERVICE_URI)
+                .setContentType(ContentType.JSON)
+                .build();
+    }
+
 
 
     @Test
     public void courierCreationSuccess () {
-        RequestSpecification requestSpecification
-                = new RequestSpecBuilder()
-                .setBaseUri(SCOOTER_SERVICE_URI)
-                .setContentType(ContentType.JSON)
-                .build();
+
         client.setRequestSpecification(requestSpecification);
 
         ValidatableResponse response = client.createCourier(COURIER);
         response.assertThat().statusCode(201);
 
-
 //        response.assertThat().body("ok", is(true));
     }
+
+    @Test
+    public void couriersWithSameLoginCreationFailure () {
+        client.setRequestSpecification(requestSpecification);
+        client.createCourier(COURIER);
+        ValidatableResponse response = client.createCourier(COURIER);
+        response.assertThat().body(containsString("Этот логин уже используется"));
+    }
+
+
 
 
 
