@@ -9,19 +9,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
 
 public class CourierCreationTest {
 
     public static final String SCOOTER_SERVICE_URI = "https://qa-scooter.praktikum-services.ru/";
 
-    public static final Courier COURIER = new Courier("naruto1", "12345", "Ivan");
+    public static final Courier COURIER = new Courier("naruta2", "12345", "Ivan");
 
     private ScooterServiceClient client = new ScooterServiceClient();
 
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
-    }
+
 
     @Test
     public void courierCreationSuccess () {
@@ -34,11 +32,18 @@ public class CourierCreationTest {
 
         ValidatableResponse response = client.createCourier(COURIER);
         response.assertThat().statusCode(201);
+
+
+//        response.assertThat().body("ok", is(true));
     }
+
+
 
     @After
     public void tearDown() {
-
+        int id = client.login(Credentials.fromCourier(COURIER)).extract().body().jsonPath()
+                .getInt("id");
+        client.deleteUser(id);
     }
 
 }
