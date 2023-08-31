@@ -22,7 +22,8 @@ public class ScooterServiceClient {
                 .spec(requestSpecification)
                 .body(courier)
                 .post(CREATE_COURIER_ENDPOINT)
-                .then();
+                .then()
+                .log().all();
     }
 
     public ValidatableResponse login(Credentials credentials) {
@@ -30,7 +31,8 @@ public class ScooterServiceClient {
                 .spec(requestSpecification)
                 .body(credentials)
                 .post(COURIER_LOGIN_ENDPOINT)
-                .then();
+                .then()
+                .log().all();
     }
 
     public ValidatableResponse deleteUser(int id)  {
