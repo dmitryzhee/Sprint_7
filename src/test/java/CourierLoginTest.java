@@ -3,6 +3,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,6 +56,20 @@ public class CourierLoginTest implements TestData{
         client.createCourier(COURIER);
         ValidatableResponse response = client.login(Credentials.fromCourier(COURIER));
         response.assertThat().body(containsString("id"));
+    }
+
+    @Test
+    public void loginWithPartialParametersFailure() {
+     Courier courier = COURIER;
+     client.createCourier(courier);
+     Credentials noPassCredentials = new Credentials(courier.getLogin(), null);
+     ValidatableResponse noPassResponse = client.login(noPassCredentials);
+     Credentials noLoginCredentials = new Credentials(null, courier.getPassword());
+     ValidatableResponse noLoginResponse = client.login(noLoginCredentials);
+     noPassResponse.assertThat().statusCode(400);
+     noLoginResponse.assertThat().statusCode(400);
+
+
     }
 
 

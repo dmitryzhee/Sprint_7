@@ -11,6 +11,8 @@ public class ScooterServiceClient {
 
     public static final String COURIER_DELETE_ENDPOINT = "/api/v1/courier/";
 
+    public static final String MAKE_ORDER_ENDPOINT = "/api/v1/orders";
+
     private RequestSpecification requestSpecification;
 
     public void setRequestSpecification(RequestSpecification requestSpecification) {
@@ -41,6 +43,15 @@ public class ScooterServiceClient {
                 .spec(requestSpecification)
                 .body(json)
                 .delete(COURIER_DELETE_ENDPOINT + id)
+                .then()
+                .log().all();
+    }
+
+    public ValidatableResponse makeOrder(Order order) {
+        return given()
+                .spec(requestSpecification)
+                .body(order)
+                .post(MAKE_ORDER_ENDPOINT)
                 .then()
                 .log().all();
     }
