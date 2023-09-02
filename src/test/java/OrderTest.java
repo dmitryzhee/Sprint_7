@@ -2,6 +2,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,8 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(Parameterized.class)
 public class OrderTest implements TestData{
@@ -45,7 +48,7 @@ public class OrderTest implements TestData{
                 {"Ivan", "Ivanov", "Pushkinskaya-5", "Pushkinskaya", "890312345678", 5, "2023-09-05", "Comment", Arrays.asList("BLACK") },
                 {"Boris", "Borisov", "<Belorusskaya>-7", "Belorusskaya", "891712345678", 7, "2023-09-01", "Comment2", Arrays.asList("GREY")},
                 {"Pavel", "Pavlov", "Tverskaya-10", "Tverskaya", "890587654321", 2, "2023-09-07", "Comment3", Arrays.asList("BLACK", "GREY")},
-
+                {"Olga", "Ivanova", "Novokuznetskaya-10", "Novokuznetskaya", "890399988877", 3, "2023-09-11", "Comment4", Arrays.asList()},
         };
     }
 
@@ -63,6 +66,14 @@ public class OrderTest implements TestData{
         Order order = new Order(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
         ValidatableResponse response = client.makeOrder(order);
         response.assertThat().statusCode(201);
+    }
+
+    @Test
+    public void responseHasTrackNumber() {
+        Order order = new Order(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
+        ValidatableResponse response = client.makeOrder(order);
+        response.assertThat().body(containsString("track"));
+
     }
 
 
