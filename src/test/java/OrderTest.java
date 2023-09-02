@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RunWith(Parameterized.class)
 public class OrderTest implements TestData{
     private String firstName;
@@ -14,17 +17,17 @@ public class OrderTest implements TestData{
     private String address;
     private String metroStation;
     private String phone;
-    private String rentTime;
-    private int deliveryDate;
+    private int rentTime;
+    private String deliveryDate;
     private String comment;
-    private String color;
+    private List<String> color;
 
     private ScooterServiceClient client = new ScooterServiceClient();
 
     RequestSpecification requestSpecification;
 
 
-    public OrderTest(String firstName, String lastName, String address, String metroStation, String phone, String rentTime, int deliveryDate, String comment, String color) {
+    public OrderTest(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment,  List<String> color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -39,7 +42,10 @@ public class OrderTest implements TestData{
     @Parameterized.Parameters
     public static Object [][] getData() {
         return new Object[][] {
-                {"Иван", "Иванов", "Пушкина-5", "Пушкинская", "903123456789", "сутки", 5, "Comment", "GREY"}
+                {"Ivan", "Ivanov", "Pushkinskaya-5", "Pushkinskaya", "890312345678", 5, "2023-09-05", "Comment", Arrays.asList("BLACK") },
+                {"Boris", "Borisov", "<Belorusskaya>-7", "Belorusskaya", "891712345678", 7, "2023-09-01", "Comment2", Arrays.asList("GREY")},
+                {"Pavel", "Pavlov", "Tverskaya-10", "Tverskaya", "890587654321", 2, "2023-09-07", "Comment3", Arrays.asList("BLACK", "GREY")},
+
         };
     }
 
@@ -54,7 +60,7 @@ public class OrderTest implements TestData{
 
     @Test
     public void makeOrderSuccess() {
-        Order order = new Order();
+        Order order = new Order(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color);
         ValidatableResponse response = client.makeOrder(order);
         response.assertThat().statusCode(201);
     }

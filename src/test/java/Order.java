@@ -1,15 +1,18 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Order {
     private String firstName;
     private String lastName;
     private String address;
     private String metroStation;
     private String phone;
-    private String rentTime;
-    private int deliveryDate;
+    private int rentTime;
+    private String  deliveryDate;
     private String comment;
-    private String color;
+    private List<String> color = new ArrayList<>();
 
-    public Order(String firstName, String lastName, String address, String metroStation, String phone, String rentTime, int deliveryDate, String comment, String color) {
+    public Order(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment,  List<String> color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -64,19 +67,19 @@ public class Order {
         this.phone = phone;
     }
 
-    public String getRentTime() {
+    public int getRentTime() {
         return rentTime;
     }
 
-    public void setRentTime(String rentTime) {
+    public void setRentTime(int rentTime) {
         this.rentTime = rentTime;
     }
 
-    public int getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(int deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
@@ -88,11 +91,11 @@ public class Order {
         this.comment = comment;
     }
 
-    public String getColor() {
+    public  List<String> getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor( List<String> color) {
         this.color = color;
     }
 
