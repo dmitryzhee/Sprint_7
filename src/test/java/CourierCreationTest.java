@@ -30,8 +30,6 @@ public class CourierCreationTest implements TestData{
 
     }
 
-
-
     @Test
     public void courierCreationSuccess () {
         courier=COURIER;
@@ -47,21 +45,47 @@ public class CourierCreationTest implements TestData{
     }
 
     @Test
+    public void noPasswordCreationFailure() {
+        courier=NO_PASSWORD_COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().statusCode(400);
+    }
+
+    @Test
+    public void noLoginCreationFailure() {
+        courier=NO_LOGIN_COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().statusCode(400);
+    }
+
+    @Test
     public void couriersWithSameLoginCreationFailure () {
+        courier=COURIER;
+        client.createCourier(courier);
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().statusCode(409);
+    }
+
+    @Test
+    public void noPasswordResponseErrorMessage() {
+        courier = NO_PASSWORD_COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().body(containsString("Недостаточно данных для создания учетной записи"));
+    }
+    @Test
+    public void noLoginResponseErrorMessage() {
+        courier = NO_LOGIN_COURIER;
+        ValidatableResponse response = client.createCourier(courier);
+        response.assertThat().body(containsString("Недостаточно данных для создания учетной записи"));
+    }
+
+    @Test
+    public void couriersWithSameResponseErrorMessage () {
         courier=COURIER;
         client.createCourier(courier);
         ValidatableResponse response = client.createCourier(courier);
         response.assertThat().body(containsString("Этот логин уже используется"));
     }
-
-    @Test
-    public void courierWithPartialParametersCorrectMessage() {
-        courier = NO_PASSWORD_COURIER;
-        ValidatableResponse response = client.createCourier(courier);
-        response.assertThat().body(containsString("Недостаточно данных для создания учетной записи"));
-    }
-
-
 
     @After
     public void tearDown() {

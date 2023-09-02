@@ -59,17 +59,20 @@ public class CourierLoginTest implements TestData{
     }
 
     @Test
-    public void loginWithPartialParametersFailure() {
-     Courier courier = COURIER;
-     client.createCourier(courier);
-     Credentials noPassCredentials = new Credentials(courier.getLogin(), null);
-     ValidatableResponse noPassResponse = client.login(noPassCredentials);
-     Credentials noLoginCredentials = new Credentials(null, courier.getPassword());
-     ValidatableResponse noLoginResponse = client.login(noLoginCredentials);
-     noPassResponse.assertThat().statusCode(400);
-     noLoginResponse.assertThat().statusCode(400);
-
-
+    public void loginWithoutPasswordFailure() {
+      Courier courier = COURIER;
+      client.createCourier(COURIER);
+      Credentials credentials = new Credentials(courier.getLogin(), "");
+      ValidatableResponse response = client.login(credentials);
+      response.assertThat().statusCode(400);
+    }
+    @Test
+    public void loginWithoutLoginFailure() {
+        Courier courier = COURIER;
+        client.createCourier(COURIER);
+        Credentials credentials = new Credentials("", courier.getPassword());
+        ValidatableResponse response = client.login(credentials);
+        response.assertThat().statusCode(400);
     }
 
 
