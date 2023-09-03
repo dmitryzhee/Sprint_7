@@ -24,7 +24,6 @@ public class OrdersListTest implements TestData {
     @Test
     public void responseContainsOrdersList() {
         ValidatableResponse response = client.getOrdersList();
-//        response.assertThat().body(containsString("orders"));
         response.assertThat().body("orders", notNullValue());
     }
 
