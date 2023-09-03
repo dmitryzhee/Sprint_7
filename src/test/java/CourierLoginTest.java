@@ -34,6 +34,25 @@ public class CourierLoginTest implements TestData{
     }
 
     @Test
+    public void loginWithoutPasswordFailure() {
+        Courier courier = COURIER;
+        client.createCourier(courier);
+        //При установке password = null, возвращается код 504 и тест падает. Куратор сказал, что это, вероятно, баг в системе.
+        Credentials credentials = new Credentials(courier.getLogin(), "");
+        ValidatableResponse response = client.login(credentials);
+        response.assertThat().statusCode(400);
+    }
+    @Test
+    public void loginWithoutLoginFailure() {
+        Courier courier = COURIER;
+        client.createCourier(courier);
+        //При установке password = null, возвращается код 504 и тест падает. Куратор сказал, что это, вероятно, баг в системе.
+        Credentials credentials = new Credentials("", courier.getPassword());
+        ValidatableResponse response = client.login(credentials);
+        response.assertThat().statusCode(400);
+    }
+
+    @Test
     public void invalidPasswordAuthorizationFailure() {
         client.createCourier(COURIER);
         Credentials credentials = Credentials.fromCourier(COURIER);
@@ -44,6 +63,7 @@ public class CourierLoginTest implements TestData{
 
     @Test
     public void invalidLoginAuthorizationFailure() {
+        //проверяется авторизация с неправильным логином, а также авторизация несуществующего пользователя
         client.createCourier(COURIER);
         Credentials credentials = Credentials.fromCourier(COURIER);
         credentials.setLogin("invalid");
@@ -52,31 +72,30 @@ public class CourierLoginTest implements TestData{
     }
 
     @Test
+    public void loginWithoutPasswordErrorMessage() {
+        Courier courier = COURIER;
+        client.createCourier(courier);
+        //При установке password = null, возвращается код 504 и тест падает. Куратор сказал, что это, вероятно, баг в системе.
+        Credentials credentials = new Credentials(courier.getLogin(), "");
+        ValidatableResponse response = client.login(credentials);
+        response.assertThat().body(containsString("Недостаточно данных для входа"));
+    }
+    @Test
+    public void loginWithoutLoginErrorMessage() {
+        Courier courier = COURIER;
+        client.createCourier(courier);
+        //При установке password = null, возвращается код 504 и тест падает. Куратор сказал, что это, вероятно, баг в системе.
+        Credentials credentials = new Credentials("", courier.getPassword());
+        ValidatableResponse response = client.login(credentials);
+        response.assertThat().body(containsString("Недостаточно данных для входа"));
+    }
+
+    @Test
     public void successfulLoginResponseContainsID() {
         client.createCourier(COURIER);
         ValidatableResponse response = client.login(Credentials.fromCourier(COURIER));
         response.assertThat().body(containsString("id"));
     }
-
-    @Test
-    public void loginWithoutPasswordFailure() {
-      Courier courier = COURIER;
-      client.createCourier(COURIER);
-      Credentials credentials = new Credentials(courier.getLogin(), "");
-      ValidatableResponse response = client.login(credentials);
-      response.assertThat().statusCode(400);
-    }
-    @Test
-    public void loginWithoutLoginFailure() {
-        Courier courier = COURIER;
-        client.createCourier(COURIER);
-        Credentials credentials = new Credentials("", courier.getPassword());
-        ValidatableResponse response = client.login(credentials);
-        response.assertThat().statusCode(400);
-    }
-
-
-
 
     @After
     public void tearDown() {

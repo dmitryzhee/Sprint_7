@@ -10,7 +10,7 @@ public class Order {
     private int rentTime;
     private String  deliveryDate;
     private String comment;
-    private List<String> color = new ArrayList<>();
+    private List<String> color;
 
     public Order(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment,  List<String> color) {
         this.firstName = firstName;
