@@ -2,7 +2,6 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.containsString;
 
 @RunWith(Parameterized.class)
-public class OrderTest implements TestData{
+public class OrderCreationTest implements TestData{
     private String firstName;
     private String lastName;
     private String address;
@@ -30,7 +29,7 @@ public class OrderTest implements TestData{
     RequestSpecification requestSpecification;
 
 
-    public OrderTest(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment,  List<String> color) {
+    public OrderCreationTest(String firstName, String lastName, String address, String metroStation, String phone, int rentTime, String deliveryDate, String comment, List<String> color) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;

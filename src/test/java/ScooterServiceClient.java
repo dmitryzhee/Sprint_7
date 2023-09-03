@@ -13,6 +13,8 @@ public class ScooterServiceClient {
 
     public static final String MAKE_ORDER_ENDPOINT = "/api/v1/orders";
 
+    public static final String ORDERS_LIST_ENDPOINT = "/api/v1/orders";
+
     private RequestSpecification requestSpecification;
 
     public void setRequestSpecification(RequestSpecification requestSpecification) {
@@ -52,6 +54,14 @@ public class ScooterServiceClient {
                 .spec(requestSpecification)
                 .body(order)
                 .post(MAKE_ORDER_ENDPOINT)
+                .then()
+                .log().all();
+    }
+
+    public ValidatableResponse getOrdersList() {
+        return given()
+                .spec(requestSpecification)
+                .get(ORDERS_LIST_ENDPOINT)
                 .then()
                 .log().all();
     }
